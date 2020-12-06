@@ -163,9 +163,16 @@ public class Tokenizer {
         char[] numstr =new char[50];
         int i = 0;
         boolean isDouble = false;
-        while (Character.isDigit(it.peekChar()) || it.peekChar() == '.' || it.peekChar() == 'e' || it.peekChar() == 'E' || it.peekChar() == '-' || it.peekChar() == '+') {
+        while (Character.isDigit(it.peekChar()) || it.peekChar() == '.') {
             if(it.peekChar() == '.'){
+                numstr[i] = it.nextChar();
+                i++;
+                while(Character.isDigit(it.peekChar()) || it.peekChar() == 'e' || it.peekChar() == 'E' || it.peekChar() == '-' || it.peekChar() == '+'){
+                    numstr[i] = it.nextChar();
+                    i++;
+                }
                 isDouble = true;
+                break;
             }
             numstr[i] = it.nextChar();
             i++;
@@ -256,7 +263,8 @@ public class Tokenizer {
                 // 填入返回语句
                 if(it.peekChar() == '/'){//是双等于号
                     while(it.nextChar() != '\n');
-                    return new Token(TokenType.COMMENT, "//", it.previousPos(), it.currentPos());
+                    //return new Token(TokenType.COMMENT, "//", it.previousPos(), it.currentPos());
+                    return nextToken();
                 }
                 return new Token(TokenType.DIV, '/', it.previousPos(), it.currentPos());
 
