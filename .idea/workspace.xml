@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/analyser/Analyser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/analyser/SymbolEntry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/error/AnalyzeError.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/error/ExpectedTokenError.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/instruction/Instruction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/instruction/Operation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/AnalyserTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/ttest" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/ttest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/tokenizer/Tokenizer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/tokenizer/Tokenizer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/ttest" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/ttest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tokenizer/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tokenizer/Tokenizer.java" afterDir="false" />
-    </list>
+    <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -113,6 +99,7 @@
       <workItem from="1606982143462" duration="320000" />
       <workItem from="1607152264310" duration="17185000" />
       <workItem from="1607178640914" duration="629000" />
+      <workItem from="1607215104486" duration="37000" />
     </task>
     <servers />
   </component>
