@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="" />
+    <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,7 +101,7 @@
       <workItem from="1606982143462" duration="320000" />
       <workItem from="1607152264310" duration="17185000" />
       <workItem from="1607178640914" duration="629000" />
-      <workItem from="1607215104486" duration="37000" />
+      <workItem from="1607215104486" duration="210000" />
     </task>
     <servers />
   </component>

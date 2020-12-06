@@ -1,4 +1,4 @@
-FROM java:11
+FROM openjdk:11
 WORKDIR /app/
 COPY ./* ./
 RUN javac src/test/AnalyserTest.java
