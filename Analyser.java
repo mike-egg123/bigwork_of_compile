@@ -9,6 +9,16 @@ public final class Analyser {
     Token peekedToken = null;
     Token peeked2Token = null;
 
+    //层次
+    int layer = 0;
+
+    //是否有main函数
+    boolean hasMain = false;
+
+    public boolean hasMain(){
+        return hasMain;
+    }
+
     /** 符号表 */
     HashMap<String, SymbolEntry> symbolTable = new HashMap<>();
 
@@ -23,6 +33,10 @@ public final class Analyser {
     public List<Instruction> analyse() throws CompileError {
         analyseProgram();
         return instructions;
+    }
+
+    public HashMap<String, SymbolEntry> getSymbolTable(){
+        return this.symbolTable;
     }
 
     /**
@@ -117,12 +131,33 @@ public final class Analyser {
      * @param curPos        当前 token 的位置（报错用）
      * @throws AnalyzeError 如果重复定义了则抛异常
      */
-    private void addSymbol(String name, boolean isInitialized, boolean isConstant, Pos curPos) throws AnalyzeError {
-        if (this.symbolTable.get(name) != null) {
-            throw new AnalyzeError(ErrorCode.DuplicateDeclaration, curPos);
-        } else {
-            this.symbolTable.put(name, new SymbolEntry(isConstant, isInitialized, getNextVariableOffset()));
+    private void addSymbol(String name, String type, int layer, boolean isInitialized, boolean isConstant, Pos curPos) throws AnalyzeError {
+        Iterator iter = symbolTable.entrySet().iterator();
+        while(iter.hasNext()){
+            HashMap.Entry entry = (HashMap.Entry)iter.next();
+            String name1 = entry.getKey().toString();
+            SymbolEntry symbolEntry1 = (SymbolEntry) entry.getValue();
+            //SymbolEntry symbolEntry = symbolTable.get(symbolEntryIterator.next());
+            //System.out.print(String.format("%s %s %d\n", name, symbolEntry.getType(), symbolEntry.getLayer()));
+            if(name1.equals(name) && symbolEntry1.getLayer() <= layer){
+                throw new AnalyzeError(ErrorCode.DuplicateDeclaration,curPos);
+            }
         }
+        this.symbolTable.put(name, new SymbolEntry(type, layer, isConstant, isInitialized, getNextVariableOffset()));
+    }
+    private void addSymbol(String name, String type, String returnType, int layer, boolean isInitialized, boolean isConstant, Pos curPos) throws AnalyzeError {
+        Iterator iter = symbolTable.entrySet().iterator();
+        while(iter.hasNext()){
+            HashMap.Entry entry = (HashMap.Entry)iter.next();
+            String name1 = entry.getKey().toString();
+            SymbolEntry symbolEntry1 = (SymbolEntry) entry.getValue();
+            //SymbolEntry symbolEntry = symbolTable.get(symbolEntryIterator.next());
+            //System.out.print(String.format("%s %s %d\n", name, symbolEntry.getType(), symbolEntry.getLayer()));
+            if(name1.equals(name) && symbolEntry1.getLayer() <= layer){
+                throw new AnalyzeError(ErrorCode.DuplicateDeclaration,curPos);
+            }
+        }
+        this.symbolTable.put(name, new SymbolEntry(type, returnType, layer, isConstant, isInitialized, getNextVariableOffset()));
     }
 
     /**
@@ -205,18 +240,33 @@ public final class Analyser {
         expect(TokenType.FN_KW);
         //函数名
         var nameToken = expect(TokenType.IDENT);
-
-        // 加入符号表
-        String name = (String) nameToken.getValue();
-        addSymbol(name, true, false, nameToken.getStartPos());
         expect(TokenType.L_PAREN);
         if(nextIf(TokenType.R_PAREN) == null){
             analyseFunctionParamList();
         }
         expect(TokenType.ARROW);
-        //返回值，以后可能要改，加入符号表啥的
-        expect(TokenType.IDENT);
+        //返回值类型，以后可能要改，加入符号表啥的
+        String returnType = (String)expect(TokenType.IDENT).getValue();
+        // 加入符号表
+        String name = (String) nameToken.getValue();
+        if(name.equals("main")){
+            hasMain = true;
+        }
+        String type = "func";
+        addSymbol(name,  type, returnType, layer++,true, false, nameToken.getStartPos());
         analyseBlockStmt();
+        //将当前的变量弹出符号表
+        int currentLayer = layer;
+        Set<String> keys = symbolTable.keySet();
+        Iterator<String> symbolEntryIterator = keys.iterator();
+        while(symbolEntryIterator.hasNext()){
+            SymbolEntry symbolEntry = symbolTable.get(symbolEntryIterator.next());
+            if(symbolEntry.getLayer() == currentLayer){
+                symbolEntryIterator.remove();
+            }
+        }
+        layer = currentLayer - 1;
+
     }
     private void analyseFunctionParamList() throws CompileError {
         if(check(TokenType.CONST_KW) || check(TokenType.IDENT)){
@@ -235,10 +285,10 @@ public final class Analyser {
         }
         var nameToken = expect(TokenType.IDENT);
         expect(TokenType.COLON);
-        expect(TokenType.IDENT);
+        String type = (String)expect(TokenType.IDENT).getValue();
         // 加入符号表
         String name = (String) nameToken.getValue();
-        addSymbol(name, true, isconst, nameToken.getStartPos());
+        addSymbol(name, type, layer,true, isconst, nameToken.getStartPos());
 
     }
     private void analyseStmt() throws CompileError{
@@ -299,9 +349,25 @@ public final class Analyser {
         expect(TokenType.R_BRACE);
     }
     private void analyseReturnStmt() throws CompileError{
-        expect(TokenType.RETURN_KW);
+        var nameToken = expect(TokenType.RETURN_KW);
         if(!check(TokenType.SEMICOLON)){
-            analyseExpr();
+            String type = analyseExpr();
+            Iterator iter = symbolTable.entrySet().iterator();
+            SymbolEntry symbolEntry = null;
+            while(iter.hasNext()){
+                HashMap.Entry entry = (HashMap.Entry)iter.next();
+                String name = entry.getKey().toString();
+                symbolEntry = (SymbolEntry) entry.getValue();
+                //SymbolEntry symbolEntry = symbolTable.get(symbolEntryIterator.next());
+                //System.out.print(String.format("%s %s %d\n", name, symbolEntry.getType(), symbolEntry.getLayer()));
+                if(symbolEntry.getLayer() == layer - 1 && symbolEntry.getType() == "func"){
+                    break;
+                }
+            }
+            assert symbolEntry != null;
+            if(!symbolEntry.getReturnType().equals(type)){
+                throw new AnalyzeError(ErrorCode.ReturnTypeWrong, nameToken.getStartPos());
+            }
         }
         expect(TokenType.SEMICOLON);
 
@@ -328,31 +394,35 @@ public final class Analyser {
         expect(TokenType.CONST_KW);
         var nameToken = expect(TokenType.IDENT);
         expect(TokenType.COLON);
-        expect(TokenType.IDENT);
+        String type = (String)expect(TokenType.IDENT).getValue();
+        if(!(type.equals("int") || type.equals("double"))){
+            throw new AnalyzeError(ErrorCode.InvalidAssignment, nameToken.getStartPos());
+        }
         expect(TokenType.ASSIGN);
         analyseExpr();
         expect(TokenType.SEMICOLON);
 
         // 加入符号表
         String name = (String) nameToken.getValue();
-        addSymbol(name, true, true, nameToken.getStartPos());
+        addSymbol(name, type, layer,true, true, nameToken.getStartPos());
     }
     private void analyseLetDeclStmt() throws CompileError{
-        boolean isInitialized = false;
         expect(TokenType.LET_KW);
         var nameToken = expect(TokenType.IDENT);
         expect(TokenType.COLON);
-        expect(TokenType.IDENT);
+        String type = (String)expect(TokenType.IDENT).getValue();
+        if(!(type.equals("int") || type.equals("double"))){
+            throw new AnalyzeError(ErrorCode.InvalidAssignment, nameToken.getStartPos());
+        }
         if(check(TokenType.ASSIGN)){
             expect(TokenType.ASSIGN);
             analyseExpr();
-            isInitialized = true;
         }
         expect(TokenType.SEMICOLON);
 
         // 加入符号表
         String name = (String) nameToken.getValue();
-        addSymbol(name, isInitialized, false, nameToken.getStartPos());
+        addSymbol(name, type, layer, true, false, nameToken.getStartPos());
     }
     /*
      * 改写表达式相关的产生式：
@@ -365,8 +435,8 @@ public final class Analyser {
      *
      * E -> IDENT = E
      *  */
-    private void analyseExpr() throws CompileError {
-        analyseC();
+    private String analyseExpr() throws CompileError {
+        String type = analyseC();
         while (true) {
             // 预读可能是运算符的 token
             var op = peek();
@@ -388,9 +458,10 @@ public final class Analyser {
 //                instructions.add(new Instruction(Operation.SUB));
 //            }
         }
+        return type;
     }
-    private void analyseC() throws CompileError {
-        analyseT();
+    private String analyseC() throws CompileError {
+        String type = analyseT();
         while (true) {
             // 预读可能是运算符的 token
             var op = peek();
@@ -408,9 +479,10 @@ public final class Analyser {
                 instructions.add(new Instruction(Operation.SUB));
             }
         }
+        return type;
     }
-    private void analyseT() throws CompileError {
-        analyseF();
+    private String analyseT() throws CompileError {
+        String type = analyseF();
         while (true) {
             // 预读可能是运算符的 token
             var op = peek();
@@ -428,46 +500,72 @@ public final class Analyser {
                 instructions.add(new Instruction(Operation.DIV));
             }
         }
+        return type;
     }
-    private void analyseF() throws CompileError {
-        analyseA();
+    private String analyseF() throws CompileError {
+        String type = analyseA();
         if(check(TokenType.AS_KW)) {
             expect(TokenType.AS_KW);
             expect(TokenType.IDENT);
         }
+        return type;
     }
-    private void analyseA() throws CompileError {
+    private String analyseA() throws CompileError {
         if(check(TokenType.MINUS)){
             expect(TokenType.MINUS);
         }
-        analyseI();
+        String type = analyseI();
+        return type;
     }
-    private void analyseI() throws CompileError {
+    private String analyseI() throws CompileError {
         if(check(TokenType.IDENT)){
-            expect(TokenType.IDENT);
+            Token nameToken = expect(TokenType.IDENT);
+            String name = nameToken.getValueString();
+            var entry = this.symbolTable.get(name);
+            if (entry == null) {
+                throw new AnalyzeError(ErrorCode.NotDeclared, nameToken.getStartPos());
+            }
             if(check(TokenType.L_PAREN)){
+                if(!entry.getType().equals("func")){
+                    throw new AnalyzeError(ErrorCode.NotDeclared, nameToken.getStartPos());
+                }
                 expect(TokenType.L_PAREN);
                 if(!check(TokenType.R_PAREN)){
                     analyseCallParamList();
                 }
                 expect(TokenType.R_PAREN);
+                return entry.getReturnType();
             }
             else if(check(TokenType.ASSIGN)){
+                if(!entry.getType().equals("int")){
+                    throw new AnalyzeError(ErrorCode.NotDeclared, nameToken.getStartPos());
+                }
+                if(entry.isConstant()){
+                    throw new AnalyzeError(ErrorCode.AssignToConstant, nameToken.getStartPos());
+                }
                 expect(TokenType.ASSIGN);
-                analyseExpr();
+                String type = analyseExpr();
+                if(type.equals("void")){
+                    throw new AnalyzeError(ErrorCode.InvalidAssignment, nameToken.getStartPos());
+                }
+                return "void";
             }
         }
         else if(check(TokenType.UINT_LITERAL)){
             expect(TokenType.UINT_LITERAL);
+            return "int";
         }
         else if(check(TokenType.DOUBLE_LITERAL)){
             expect(TokenType.DOUBLE_LITERAL);
+            return "double";
         }
         else if(check(TokenType.L_PAREN)){
             expect(TokenType.L_PAREN);
-            analyseExpr();
+            String type = analyseExpr();
             expect(TokenType.R_PAREN);
+            return type;
         }
+        return "null";
     }
     private void analyseCallParamList() throws CompileError{
         analyseExpr();

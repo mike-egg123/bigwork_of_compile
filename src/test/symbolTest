@@ -1,0 +1,12 @@
+//声明全局变量
+let k:int = 1;
+fn myfunc() -> void {
+    let j:int = 2;
+    return;
+}
+fn main1() -> void {
+    let j:int = 2;
+    const i:int = 3;
+    myfunc();
+}
+

@@ -2,10 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/SymbolTableTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/symbolTest" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge.toml" beforeDir="false" afterPath="$PROJECT_DIR$/judge.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/Analyser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StringIter.java" beforeDir="false" afterPath="$PROJECT_DIR$/StringIter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SymbolEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/SymbolEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/analyser/Analyser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/analyser/Analyser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/analyser/SymbolEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/analyser/SymbolEntry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/error/ErrorCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/error/ErrorCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/ttest" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/ttest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/analyser/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/analyser/Analyser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/analyser/SymbolEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/analyser/SymbolEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/error/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/error/ErrorCode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,11 +59,25 @@
       <recent name="F:\bigwork_of_compile\src\analyser" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.AnalyserTest">
+  <component name="RunManager" selected="Application.SymbolTableTest">
     <configuration name="AnalyserTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.AnalyserTest" />
       <module name="bigwork_of_compile" />
       <option name="PROGRAM_PARAMETERS" value="F:\bigwork_of_compile\src\test\ttest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SymbolTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.SymbolTableTest" />
+      <module name="bigwork_of_compile" />
+      <option name="PROGRAM_PARAMETERS" value="F:\bigwork_of_compile\src\test\symbolTest" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="test.*" />
@@ -81,9 +105,11 @@
     <list>
       <item itemvalue="Application.AnalyserTest" />
       <item itemvalue="Application.TokenizerTest" />
+      <item itemvalue="Application.SymbolTableTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SymbolTableTest" />
         <item itemvalue="Application.AnalyserTest" />
         <item itemvalue="Application.TokenizerTest" />
       </list>
@@ -104,7 +130,8 @@
       <workItem from="1606982143462" duration="320000" />
       <workItem from="1607152264310" duration="17185000" />
       <workItem from="1607178640914" duration="629000" />
-      <workItem from="1607215104486" duration="1408000" />
+      <workItem from="1607215104486" duration="12872000" />
+      <workItem from="1607236872629" duration="275000" />
     </task>
     <servers />
   </component>
@@ -116,49 +143,77 @@
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="233" y="7" key="#Project_Structure/0.0.1280.689@0.0.1280.689" timestamp="1606613345040" />
-    <state x="162" y="5" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607160745007">
+    <state x="162" y="5" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607220382845">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="162" y="5" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.689@0.0.1280.689" timestamp="1607160745007" />
-    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606617326322">
+    <state x="162" y="5" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.689@0.0.1280.689" timestamp="1607220382845" />
+    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607219578223">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" timestamp="1606617326322" />
-    <state width="1237" height="208" key="GridCell.Tab.0.bottom" timestamp="1607173775993">
+    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" timestamp="1607219578223" />
+    <state x="446" y="38" key="#com.intellij.ide.util.MemberChooser" timestamp="1607227114844">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607173775993" />
-    <state width="1237" height="208" key="GridCell.Tab.0.center" timestamp="1607173775993">
+    <state x="446" y="38" key="#com.intellij.ide.util.MemberChooser/0.0.1280.689@0.0.1280.689" timestamp="1607227114844" />
+    <state x="487" y="105" key="FileChooserDialogImpl" timestamp="1607220352894">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1607173775993" />
-    <state width="1237" height="208" key="GridCell.Tab.0.left" timestamp="1607173775993">
+    <state x="487" y="105" key="FileChooserDialogImpl/0.0.1280.689@0.0.1280.689" timestamp="1607220352894" />
+    <state width="1237" height="208" key="GridCell.Tab.0.bottom" timestamp="1607228413075">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1607173775993" />
-    <state width="1237" height="208" key="GridCell.Tab.0.right" timestamp="1607173775993">
+    <state width="1237" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.0.center" timestamp="1607228413075">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1607173775993" />
-    <state width="1237" height="208" key="GridCell.Tab.1.bottom" timestamp="1607173775994">
+    <state width="1237" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.0.left" timestamp="1607228413075">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607173775994" />
-    <state width="1237" height="208" key="GridCell.Tab.1.center" timestamp="1607173775994">
+    <state width="1237" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.0.right" timestamp="1607228413075">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" timestamp="1607173775994" />
-    <state width="1237" height="208" key="GridCell.Tab.1.left" timestamp="1607173775994">
+    <state width="1237" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.1.bottom" timestamp="1607228413075">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" timestamp="1607173775994" />
-    <state width="1237" height="208" key="GridCell.Tab.1.right" timestamp="1607173775994">
+    <state width="1237" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.1.center" timestamp="1607228413075">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" timestamp="1607173775994" />
+    <state width="1237" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.1.left" timestamp="1607228413075">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state width="1237" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
+    <state width="1237" height="208" key="GridCell.Tab.1.right" timestamp="1607228413075">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state width="1237" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" timestamp="1607228413075" />
     <state x="144" y="0" key="SettingsEditor" timestamp="1606613244027">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="144" y="0" key="SettingsEditor/0.0.1280.689@0.0.1280.689" timestamp="1606613244027" />
+    <state x="303" y="10" width="672" height="678" key="search.everywhere.popup" timestamp="1607223707607">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="303" y="10" width="672" height="678" key="search.everywhere.popup/0.0.1280.689@0.0.1280.689" timestamp="1607223707607" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/analyser/Analyser.java</url>
+          <line>543</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="symbolTable" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

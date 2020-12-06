@@ -55,5 +55,5 @@ fn main() -> void {
 }
 //自定义函数
 fn my_func(a:int, b:double)->double{
-    
+
 }
