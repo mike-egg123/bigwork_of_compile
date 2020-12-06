@@ -268,7 +268,7 @@ public final class Analyser {
         }
         String type = "func";
         addSymbol(name,  type, returnType, layer++,true, false, nameToken.getStartPos());
-        analyseBlockStmt();
+        analyseBlockStmt(name);
         //将当前的变量弹出符号表
         int currentLayer = layer;
         Set<String> keys = symbolTable.keySet();
@@ -305,7 +305,7 @@ public final class Analyser {
         addSymbol(name, type, layer,true, isconst, nameToken.getStartPos());
 
     }
-    private void analyseStmt() throws CompileError{
+    private void analyseStmt(String funcName) throws CompileError{
         if(check(TokenType.R_BRACE)){
         }
         else{
@@ -327,11 +327,11 @@ public final class Analyser {
             }
             //return语句
             else if(check(TokenType.RETURN_KW)){
-                analyseReturnStmt();
+                analyseReturnStmt(funcName);
             }
             //语句块
             else if(check(TokenType.L_BRACE)){
-                analyseBlockStmt();
+                analyseBlockStmt("null");
             }
             //空语句
             else if(check(TokenType.SEMICOLON)){
@@ -352,34 +352,31 @@ public final class Analyser {
         expect(TokenType.SEMICOLON);
 
     }
-    private void analyseBlockStmt() throws CompileError{
+    private void analyseBlockStmt(String funcName) throws CompileError{
         expect(TokenType.L_BRACE);
 //        if(nextIf(TokenType.R_BRACE) == null){
 //            analyseStmt();
 //        }
         while(!check(TokenType.R_BRACE)){
-            analyseStmt();
+            analyseStmt(funcName);
         }
         expect(TokenType.R_BRACE);
     }
-    private void analyseReturnStmt() throws CompileError{
+    private void analyseReturnStmt(String funcName) throws CompileError{
+        boolean isInt = false;
+        SymbolEntry symbolEntry = symbolTable.get(funcName);
         var nameToken = expect(TokenType.RETURN_KW);
         if(!check(TokenType.SEMICOLON)){
+            isInt = true;
             String type = analyseExpr();
-            Iterator iter = symbolTable.entrySet().iterator();
-            SymbolEntry symbolEntry = null;
-            while(iter.hasNext()){
-                HashMap.Entry entry = (HashMap.Entry)iter.next();
-                String name = entry.getKey().toString();
-                symbolEntry = (SymbolEntry) entry.getValue();
-                //SymbolEntry symbolEntry = symbolTable.get(symbolEntryIterator.next());
-                //System.out.print(String.format("%s %s %d\n", name, symbolEntry.getType(), symbolEntry.getLayer()));
-                if(symbolEntry.getLayer() == layer - 1 && symbolEntry.getType() == "func"){
-                    break;
-                }
-            }
             assert symbolEntry != null;
             if(!symbolEntry.getReturnType().equals(type)){
+                throw new AnalyzeError(ErrorCode.ReturnTypeWrong, nameToken.getStartPos());
+            }
+        }
+        assert symbolEntry != null;
+        if(symbolEntry.getReturnType().equals("int")){
+            if(!isInt){
                 throw new AnalyzeError(ErrorCode.ReturnTypeWrong, nameToken.getStartPos());
             }
         }
@@ -389,15 +386,15 @@ public final class Analyser {
     private void analyseWhileStmt() throws CompileError{
         expect(TokenType.WHILE_KW);
         analyseExpr();
-        analyseBlockStmt();
+        analyseBlockStmt("null");
     }
     private void analyseIfStmt() throws CompileError{
         expect(TokenType.IF_KW);
         analyseExpr();
-        analyseBlockStmt();
+        analyseBlockStmt("null");
         if(nextIf(TokenType.ELSE_KW) != null){
             if(check(TokenType.L_BRACE)){
-                analyseBlockStmt();
+                analyseBlockStmt("null");
             }
             else if(check(TokenType.IF_KW)){
                 analyseIfStmt();
