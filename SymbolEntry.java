@@ -1,9 +1,75 @@
+import java.util.HashMap;
+
 public class SymbolEntry {
     String type;
     int layer;
     boolean isConstant;
     String returnType = null;
+
+    public InstructionEntry[] getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(InstructionEntry[] instrucions) {
+        this.instructions = instrucions;
+    }
+
     boolean isValid = true;
+    InstructionEntry[] instructions = new InstructionEntry[1000];
+    int instructionLen = 0;
+    int locaVarCount = 0;
+    int argVarCount = 1;
+    HashMap<String, Integer> localVars = new HashMap<>();
+    HashMap<String, Integer> argVars = new HashMap<>();
+    boolean isParam = false;
+
+    public int getArgVarCount() {
+        return argVarCount;
+    }
+
+    public void setArgVarCount(int argVarCount) {
+        this.argVarCount = argVarCount;
+    }
+
+    public HashMap<String, Integer> getArgVars() {
+        return argVars;
+    }
+
+    public void setArgVars(HashMap<String, Integer> argVars) {
+        this.argVars = argVars;
+    }
+
+    public boolean isParam() {
+        return isParam;
+    }
+
+    public void setParam(boolean param) {
+        isParam = param;
+    }
+
+    public HashMap<String, Integer> getLocalVars() {
+        return localVars;
+    }
+
+    public void setLocalVars(HashMap<String, Integer> localVars) {
+        this.localVars = localVars;
+    }
+
+    public int getLocaVarCount() {
+        return locaVarCount;
+    }
+
+    public void setLocaVarCount(int locaVarCount) {
+        this.locaVarCount = locaVarCount;
+    }
+
+    public int getInstructionLen() {
+        return instructionLen;
+    }
+
+    public void setInstructionLen(int instructionLen) {
+        this.instructionLen = instructionLen;
+    }
 
     public boolean isValid() {
         return isValid;
@@ -60,6 +126,15 @@ public class SymbolEntry {
         this.type = type;
         this.layer = layer;
         this.returnType = returnType;
+    }
+    public SymbolEntry(String type, String returnType, InstructionEntry[] instructions, int layer, boolean isConstant, boolean isDeclared, int stackOffset) {
+        this.isConstant = isConstant;
+        this.isInitialized = isDeclared;
+        this.stackOffset = stackOffset;
+        this.type = type;
+        this.layer = layer;
+        this.returnType = returnType;
+        this.instructions = instructions;
     }
 
     /**
