@@ -343,12 +343,19 @@ public final class Analyser {
         }
         //将当前的变量弹出符号表
         int currentLayer = layer;
-        Set<String> keys = symbolTable.keySet();
-        Iterator<String> symbolEntryIterator = keys.iterator();
-        while(symbolEntryIterator.hasNext()){
-            SymbolEntry symbolEntry = symbolTable.get(symbolEntryIterator.next());
+        Iterator iter = symbolTable.entrySet().iterator();
+        while(iter.hasNext()){
+            HashMap.Entry entry = (HashMap.Entry)iter.next();
+            String varname = entry.getKey().toString();
+            SymbolEntry symbolEntry = (SymbolEntry) entry.getValue();
             if(symbolEntry.getLayer() == currentLayer){
-                symbolEntryIterator.remove();
+                if(globaVarIndex.get(varname) != null){
+                    symbolEntry.setLayer(0);
+                    symbolEntry.setParam(false);
+                }
+                else{
+                    iter.remove();
+                }
             }
         }
         layer = currentLayer - 1;
