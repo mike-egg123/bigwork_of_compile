@@ -545,9 +545,11 @@ public final class Analyser {
         analyseBlockStmt(funcName);
         //loc2
         int loc2 = function.getInstructionLen();
-        insertInstru(funcName, new InstructionEntry("br", loc2 - loc1), loc1);
+        insertInstru(funcName, new InstructionEntry("br", loc2 - loc1 + 1), loc1);
         //insertInstru(funcName, new InstructionEntry("br", 0), loc2 + 1);
+        boolean hasElse = false;
         if(nextIf(TokenType.ELSE_KW) != null){
+            hasElse = true;
             if(check(TokenType.L_BRACE)){
                 analyseBlockStmt(funcName);
 //                int loc3 = function.getInstructionLen();
@@ -559,7 +561,12 @@ public final class Analyser {
                 //insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
         }
+        function = symbolTable.get(funcName);
         int loc3 = function.getInstructionLen();
+        if(hasElse){
+            insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
+            loc3++;
+        }
         insertInstru(funcName, new InstructionEntry("br", 0), loc3);
     }
     private void analyseConstDeclStmt(String funcName, boolean isLoca) throws CompileError{
@@ -954,9 +961,16 @@ public final class Analyser {
                 HashMap<String, Integer> localVars = function.getLocalVars();
                 HashMap<String, Integer> argVars = function.getArgVars();
                 if(entry.isParam){
-                    int thisIndex = argVars.get(name);
-                    InstructionEntry instructionEntry1 = new InstructionEntry("arga", thisIndex);
-                    instructionEntries[len++] = instructionEntry1;
+                    if(function.getReturnType().equals("void")){
+                        int thisIndex = argVars.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("arga", thisIndex - 1);
+                        instructionEntries[len++] = instructionEntry1;
+                    }
+                    else{
+                        int thisIndex = argVars.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("arga", thisIndex);
+                        instructionEntries[len++] = instructionEntry1;
+                    }
                 }
                 else{
                     int thisIndex = localVars.get(name);
