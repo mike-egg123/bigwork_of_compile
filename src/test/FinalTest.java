@@ -38,10 +38,12 @@ public class FinalTest {
         HashMap<String, SymbolEntry> symbolTable = an.getSymbolTable();
         Iterator iter = symbolTable.entrySet().iterator();
         int top = 0;
+        int trueGlobalVarsCount = 0;
         while(iter.hasNext()){
             HashMap.Entry entry = (HashMap.Entry)iter.next();
             SymbolEntry symbolEntry = (SymbolEntry) entry.getValue();
             if(!symbolEntry.getType().equals("func")){
+                trueGlobalVarsCount++;
                 if(symbolEntry.getType().equals("string")){
                     String name = (String)entry.getKey();
                     System.out.println(name);
@@ -155,8 +157,11 @@ public class FinalTest {
                 output.addAll(instruByte);
                 if(instructionEntry.getOpera() != -1000){
                     int opera = instructionEntry.getOpera();
-                    if(intInstru == 0x0c){
-                        opera = opera + functionCount + 8;
+                    if(intInstru == 0x4a){
+                        //System.out.println(trueGlobalVarsCount);
+                        opera = opera + trueGlobalVarsCount;
+                        System.out.println();
+                        System.out.println(opera);
                     }
                     boolean is64OrNot = is64(instructionEntry.getInstru());
                     if(is64OrNot){
