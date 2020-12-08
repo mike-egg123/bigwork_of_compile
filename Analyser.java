@@ -25,6 +25,14 @@ public final class Analyser {
     HashMap<String, Integer> funcIndex = new HashMap<String, Integer>();
     int findex = 9;
 
+    public HashMap<String, Integer> getFuncIndex() {
+        return funcIndex;
+    }
+
+    public void setFuncIndex(HashMap<String, Integer> funcIndex) {
+        this.funcIndex = funcIndex;
+    }
+
     public void initSymbolTable(){
         this.symbolTable.put("getint", new SymbolEntry("func", "int", new InstructionEntry[10], 0, true, true, getNextVariableOffset()));
         funcIndex.put("getint", 0);
@@ -284,7 +292,7 @@ public final class Analyser {
             SymbolEntry symbolEntry1 = (SymbolEntry) entry.getValue();
             if(symbolEntry1.getType().equals("func") && name1.equals("main")){
                 InstructionEntry instructionEntry4 = new InstructionEntry("stackalloc", 0);
-                InstructionEntry instructionEntry = new InstructionEntry("call", funcIndex.get(name1));
+                InstructionEntry instructionEntry = new InstructionEntry("call", funcIndex.get(name1) - 8);
                 instructionEntries[j++] = instructionEntry4;
                 instructionEntries[j++] = instructionEntry;
             }
@@ -787,13 +795,15 @@ public final class Analyser {
                     throw new AnalyzeError(ErrorCode.NotDeclared, nameToken.getStartPos());
                 }
                 String callOrcallname = "call";
+                boolean isLib = false;
                 if(name.equals("getint") || name.equals("getdouble") || name.equals("getchar") || name.equals("putint") || name.equals("putchar") || name.equals("putdouble") || name.equals("putstr") || name.equals("putln")){
                     callOrcallname = "callname";
+                    isLib = true;
                 }
                 expect(TokenType.L_PAREN);
                 if(!check(TokenType.R_PAREN)){
                     SymbolEntry function = symbolTable.get(funcName);
-                    if(function.getReturnType().equals("void")){
+                    if(entry.getReturnType().equals("void")){
                         InstructionEntry[] instructionEntries = function.getInstructions();
                         int len = function.getInstructionLen();
                         InstructionEntry instructionEntry1 = new InstructionEntry("stackalloc", 0);
@@ -802,7 +812,7 @@ public final class Analyser {
                         function.setInstructions(instructionEntries);
                         analyseCallParamList(funcName);
                     }
-                    else if(function.getReturnType().equals("int")){
+                    else if(entry.getReturnType().equals("int")){
                         InstructionEntry[] instructionEntries = function.getInstructions();
                         int len = function.getInstructionLen();
                         InstructionEntry instructionEntry1 = new InstructionEntry("stackalloc", 1);
@@ -819,10 +829,14 @@ public final class Analyser {
                     InstructionEntry[] instructionEntries = function.getInstructions();
                     int len = function.getInstructionLen();
                     // 生成代码
-                    InstructionEntry instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name));
-                    InstructionEntry instructionEntry3 = new InstructionEntry("popn", 1);
+                    InstructionEntry instructionEntry2;
+                    if(isLib){
+                        instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name));
+                    }
+                    else{
+                        instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name) - 8);
+                    }
                     instructionEntries[len++] = instructionEntry2;
-                    instructionEntries[len++] = instructionEntry3;
                     function.setInstructionLen(len);
                     function.setInstructions(instructionEntries);
                 }
@@ -831,7 +845,13 @@ public final class Analyser {
                     InstructionEntry[] instructionEntries = function.getInstructions();
                     int len = function.getInstructionLen();
                     // 生成代码
-                    InstructionEntry instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name));
+                    InstructionEntry instructionEntry2;
+                    if(isLib){
+                        instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name));
+                    }
+                    else{
+                        instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name) - 8);
+                    }
                     instructionEntries[len++] = instructionEntry2;
                     function.setInstructionLen(len);
                     function.setInstructions(instructionEntries);

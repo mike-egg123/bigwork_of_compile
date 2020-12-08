@@ -1,3 +1,4 @@
+let k:int = 1;
 fn foo(i: int) -> int {
     return -i;
 }
