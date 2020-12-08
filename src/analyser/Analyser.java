@@ -35,8 +35,10 @@ public final class Analyser {
     HashMap<String, SymbolEntry> symbolTable = new HashMap<>();
 
     //索引表
-    HashMap<String, Integer> funcIndex = new HashMap<String, Integer>();
+    HashMap<String, Integer> funcIndex = new HashMap<>();
     int findex = 9;
+    HashMap<String, Integer> globaVarIndex = new HashMap<>();
+    int vindex = 0;
 
     public HashMap<String, Integer> getFuncIndex() {
         return funcIndex;
@@ -603,6 +605,9 @@ public final class Analyser {
         addSymbol(name, type, layer,true, true, nameToken.getStartPos());
         HashMap<String,Integer> localVars = function.getLocalVars();
         localVars.put(name, locaVarCount - 1);
+        if(!isLoca){
+            globaVarIndex.put(name, vindex++);
+        }
     }
     private void analyseLetDeclStmt(String funcName, boolean isLoca) throws CompileError{
         boolean isInitialized = false;
@@ -648,6 +653,9 @@ public final class Analyser {
         addSymbol(name, type, layer, isInitialized, false, nameToken.getStartPos());
         HashMap<String,Integer> localVars = function.getLocalVars();
         localVars.put(name, function.getLocaVarCount() - 1);
+        if(!isLoca){
+            globaVarIndex.put(name, vindex++);
+        }
     }
     /*
      * 改写表达式相关的产生式：
@@ -949,9 +957,15 @@ public final class Analyser {
                     }
                 }
                 else{
-                    int thisIndex = localVars.get(name);
-                    InstructionEntry instructionEntry1 = new InstructionEntry("loca", thisIndex);
-                    instructionEntries[len++] = instructionEntry1;
+                    try{
+                        int thisIndex = localVars.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("loca", thisIndex);
+                        instructionEntries[len++] = instructionEntry1;
+                    }catch (NullPointerException n){
+                        int thisIndex = globaVarIndex.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("globa", thisIndex);
+                        instructionEntries[len++] = instructionEntry1;
+                    }
                 }
                 function.setInstructionLen(len);
                 function.setInstructions(instructionEntries);
@@ -988,9 +1002,15 @@ public final class Analyser {
                     }
                 }
                 else{
-                    int thisIndex = localVars.get(name);
-                    InstructionEntry instructionEntry1 = new InstructionEntry("loca", thisIndex);
-                    instructionEntries[len++] = instructionEntry1;
+                    try{
+                        int thisIndex = localVars.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("loca", thisIndex);
+                        instructionEntries[len++] = instructionEntry1;
+                    }catch (NullPointerException n){
+                        int thisIndex = globaVarIndex.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("globa", thisIndex);
+                        instructionEntries[len++] = instructionEntry1;
+                    }
                 }
                 InstructionEntry instructionEntry2 = new InstructionEntry("load64");
                 instructionEntries[len++] = instructionEntry2;
