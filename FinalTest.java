@@ -35,9 +35,10 @@ public class FinalTest {
             }
         }
         globalCount = top;
-//        for(int i = 0;i < top;i++){
-//            System.out.println(globals[i].isConst + " " + globals[i].valueCount + " " + globals[i].valueItem);
-//        }
+        System.out.println("全局变量表：");
+        for(int i = 0;i < top;i++){
+            System.out.println(globals[i].isConst + " " + globals[i].valueCount + " " + globals[i].valueItem);
+        }
         int funcTableTop = 0;
         for(int i = 8;i < funcEnd;i++){
             String funcName = globals[i].valueItem;
@@ -58,12 +59,15 @@ public class FinalTest {
             }
         }
         functionCount = funcTableTop;
-//        for(int i = 0;i < funcTableTop;i++){
-//            System.out.println(functions[i].nameLoc + " " + functions[i].ret_slots + " " + functions[i].param_slots + " " + functions[i].loc_slots + " " + functions[i].body_count);
-//            for(int j = 0;j < functions[i].body_count;j++){
-//                System.out.println(functions[i].instructions[j].getInstru() + "(" + functions[i].instructions[j].getOpera() + ")");
-//            }
-//        }
+        System.out.println("函数表：");
+        for(int i = 0;i < funcTableTop;i++){
+            System.out.println(functions[i].nameLoc + " " + functions[i].ret_slots + " " + functions[i].param_slots + " " + functions[i].loc_slots + " " + functions[i].body_count);
+            for(int j = 0;j < functions[i].body_count;j++){
+                System.out.println(functions[i].instructions[j].getInstru() + "(" + functions[i].instructions[j].getOpera() + ")");
+            }
+        }
+        System.out.println(globalCount);
+        System.out.println(functionCount);
         List<Byte> output = new ArrayList<>();
         //magic
         List<Byte> magic=int2bytes(4,0x72303b3e);
@@ -95,7 +99,7 @@ public class FinalTest {
         }
         //functions.count
         List<Byte> functionCountByte=int2bytes(4, functionCount);
-        output.addAll(globalCountByte);
+        output.addAll(functionCountByte);
         //functions
         for(int i = 0;i < functionCount;i++){
             //name
@@ -121,6 +125,9 @@ public class FinalTest {
                 output.addAll(instruByte);
                 if(instructionEntry.getOpera() != -1000){
                     int opera = instructionEntry.getOpera();
+                    if(intInstru == 0x0c){
+                        opera = opera + functionCount + 8;
+                    }
                     boolean is64OrNot = is64(instructionEntry.getInstru());
                     if(is64OrNot){
                         List<Byte> operaByte = long2bytes(8, opera);
