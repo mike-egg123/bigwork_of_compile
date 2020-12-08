@@ -922,9 +922,24 @@ public final class Analyser {
                 int len = function.getInstructionLen();
                 // 生成代码
                 HashMap<String, Integer> localVars = function.getLocalVars();
-                int thisIndex = localVars.get(name);
-                InstructionEntry instructionEntry1 = new InstructionEntry("loca", thisIndex);
-                instructionEntries[len++] = instructionEntry1;
+                HashMap<String, Integer> argVars = function.getArgVars();
+                if(entry.isParam){
+                    if(function.getReturnType().equals("void")){
+                        int thisIndex = argVars.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("arga", thisIndex - 1);
+                        instructionEntries[len++] = instructionEntry1;
+                    }
+                    else{
+                        int thisIndex = argVars.get(name);
+                        InstructionEntry instructionEntry1 = new InstructionEntry("arga", thisIndex);
+                        instructionEntries[len++] = instructionEntry1;
+                    }
+                }
+                else{
+                    int thisIndex = localVars.get(name);
+                    InstructionEntry instructionEntry1 = new InstructionEntry("loca", thisIndex);
+                    instructionEntries[len++] = instructionEntry1;
+                }
                 function.setInstructionLen(len);
                 function.setInstructions(instructionEntries);
                 String type = analyseExpr(funcName);
