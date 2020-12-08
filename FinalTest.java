@@ -1,13 +1,3 @@
-package test;
-
-import analyser.Analyser;
-import analyser.FunctionIndex;
-import analyser.InstructionEntry;
-import analyser.SymbolEntry;
-import error.CompileError;
-import tokenizer.StringIter;
-import tokenizer.Tokenizer;
-
 import java.io.*;
 import java.util.*;
 
