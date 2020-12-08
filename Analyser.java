@@ -573,19 +573,8 @@ public final class Analyser {
         localVars.put(name, locaVarCount - 1);
     }
     private void analyseLetDeclStmt(String funcName, boolean isLoca) throws CompileError{
+        boolean isInitialized = false;
         SymbolEntry function = symbolTable.get(funcName);
-        String locaOrglob = "globa";
-        if(isLoca){
-            locaOrglob = "loca";
-        }
-        InstructionEntry[] instructionEntries = function.getInstructions();
-        int len = function.getInstructionLen();
-        int locaVarCount = function.getLocaVarCount();
-        InstructionEntry instructionEntry1 = new InstructionEntry(locaOrglob, locaVarCount++);
-        function.setLocaVarCount(locaVarCount);
-        instructionEntries[len++] = instructionEntry1;
-        function.setInstructionLen(len);
-        function.setInstructions(instructionEntries);
         expect(TokenType.LET_KW);
         var nameToken = expect(TokenType.IDENT);
         expect(TokenType.COLON);
@@ -594,7 +583,20 @@ public final class Analyser {
             throw new AnalyzeError(ErrorCode.InvalidAssignment, nameToken.getStartPos());
         }
         if(check(TokenType.ASSIGN)){
+            isInitialized = true;
             expect(TokenType.ASSIGN);
+            String locaOrglob = "globa";
+            if(isLoca){
+                locaOrglob = "loca";
+            }
+            InstructionEntry[] instructionEntries = function.getInstructions();
+            int len = function.getInstructionLen();
+            int locaVarCount = function.getLocaVarCount();
+            InstructionEntry instructionEntry1 = new InstructionEntry(locaOrglob, locaVarCount++);
+            function.setLocaVarCount(locaVarCount);
+            instructionEntries[len++] = instructionEntry1;
+            function.setInstructionLen(len);
+            function.setInstructions(instructionEntries);
             analyseExpr(funcName);
             len = function.getInstructionLen();
             InstructionEntry instructionEntry2 = new InstructionEntry("store64");
@@ -602,13 +604,18 @@ public final class Analyser {
             function.setInstructionLen(len);
             function.setInstructions(instructionEntries);
         }
+        else{
+            int locaVarCount = function.getLocaVarCount();
+            locaVarCount++;
+            function.setLocaVarCount(locaVarCount);
+        }
         expect(TokenType.SEMICOLON);
 
         // 加入符号表
         String name = (String) nameToken.getValue();
-        addSymbol(name, type, layer, true, false, nameToken.getStartPos());
+        addSymbol(name, type, layer, isInitialized, false, nameToken.getStartPos());
         HashMap<String,Integer> localVars = function.getLocalVars();
-        localVars.put(name, locaVarCount - 1);
+        localVars.put(name, function.getLocaVarCount() - 1);
     }
     /*
      * 改写表达式相关的产生式：
@@ -801,7 +808,10 @@ public final class Analyser {
                     isLib = true;
                 }
                 expect(TokenType.L_PAREN);
+                boolean hasParam = false;
+                //无返回值
                 if(!check(TokenType.R_PAREN)){
+                    hasParam = true;
                     SymbolEntry function = symbolTable.get(funcName);
                     if(entry.getReturnType().equals("void")){
                         InstructionEntry[] instructionEntries = function.getInstructions();
@@ -824,11 +834,13 @@ public final class Analyser {
                 }
                 expect(TokenType.R_PAREN);
                 String returnType = entry.getReturnType();
-                if(returnType.equals("int")){
+                if(returnType.equals("int") && !hasParam){
                     SymbolEntry function = symbolTable.get(funcName);
                     InstructionEntry[] instructionEntries = function.getInstructions();
                     int len = function.getInstructionLen();
                     // 生成代码
+                    InstructionEntry instructionEntry1 = new InstructionEntry("stackalloc", 1);
+                    instructionEntries[len++] = instructionEntry1;
                     InstructionEntry instructionEntry2;
                     if(isLib){
                         instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name));
@@ -840,7 +852,25 @@ public final class Analyser {
                     function.setInstructionLen(len);
                     function.setInstructions(instructionEntries);
                 }
-                else if(returnType.equals("void")){
+                else if(returnType.equals("void") && !hasParam){
+                    SymbolEntry function = symbolTable.get(funcName);
+                    InstructionEntry[] instructionEntries = function.getInstructions();
+                    int len = function.getInstructionLen();
+                    // 生成代码
+                    InstructionEntry instructionEntry1 = new InstructionEntry("stackalloc", 0);
+                    instructionEntries[len++] = instructionEntry1;
+                    InstructionEntry instructionEntry2;
+                    if(isLib){
+                        instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name));
+                    }
+                    else{
+                        instructionEntry2 = new InstructionEntry(callOrcallname, funcIndex.get(name) - 8);
+                    }
+                    instructionEntries[len++] = instructionEntry2;
+                    function.setInstructionLen(len);
+                    function.setInstructions(instructionEntries);
+                }
+                else{
                     SymbolEntry function = symbolTable.get(funcName);
                     InstructionEntry[] instructionEntries = function.getInstructions();
                     int len = function.getInstructionLen();
