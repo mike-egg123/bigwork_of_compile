@@ -40,21 +40,28 @@ public class FinalTest {
         int top = 0;
         while(iter.hasNext()){
             HashMap.Entry entry = (HashMap.Entry)iter.next();
+            SymbolEntry symbolEntry = (SymbolEntry) entry.getValue();
+            if(!symbolEntry.getType().equals("func")){
+                if(symbolEntry.getType().equals("string")){
+                    String name = (String)entry.getKey();
+                    System.out.println(name);
+                    globals[top++] = new Global(symbolEntry.isConstant() ? 1 : 0, name.length(), name);
+                }
+                else{
+                    globals[top++] = new Global(symbolEntry.isConstant() ? 1 : 0, 8, "0");
+                }
+            }
+        }
+        int globalVarsEnd = top;
+        iter = symbolTable.entrySet().iterator();
+        while(iter.hasNext()){
+            HashMap.Entry entry = (HashMap.Entry)iter.next();
             String name = entry.getKey().toString();
             SymbolEntry symbolEntry = (SymbolEntry) entry.getValue();
             if(symbolEntry.getType().equals("func")){
                 int funcIndex = an.getFuncIndex().get(name);
-                globals[funcIndex] = new Global(1, name.length(), name);
+                globals[funcIndex + globalVarsEnd] = new Global(1, name.length(), name);
                 top++;
-            }
-        }
-        int funcEnd = top;
-        iter = symbolTable.entrySet().iterator();
-        while(iter.hasNext()){
-            HashMap.Entry entry = (HashMap.Entry)iter.next();
-            SymbolEntry symbolEntry = (SymbolEntry) entry.getValue();
-            if(!symbolEntry.getType().equals("func")){
-                globals[top++] = new Global(symbolEntry.isConstant() ? 1 : 0, 8, "0");
             }
         }
         globalCount = top;
@@ -63,7 +70,7 @@ public class FinalTest {
             System.out.println(globals[i].isConst + " " + globals[i].valueCount + " " + globals[i].valueItem);
         }
         int funcTableTop = 0;
-        for(int i = 8;i < funcEnd;i++){
+        for(int i = globalVarsEnd + 8;i < globalCount;i++){
             String funcName = globals[i].valueItem;
             SymbolEntry funcEntry = symbolTable.get(funcName);
             int ret_slots = 0;

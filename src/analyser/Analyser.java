@@ -458,14 +458,21 @@ public final class Analyser {
         var nameToken = expect(TokenType.RETURN_KW);
         SymbolEntry function = symbolTable.get(funcName);
         InstructionEntry[] instructionEntries = function.getInstructions();
-        int len = function.getInstructionLen();
-        InstructionEntry instructionEntry1 = new InstructionEntry("arga", 0);
-        instructionEntries[len++] = instructionEntry1;
-        function.setInstructionLen(len);
-        function.setInstructions(instructionEntries);
+        //有返回值
         if(!check(TokenType.SEMICOLON)){
+            int len = function.getInstructionLen();
+            InstructionEntry instructionEntry1 = new InstructionEntry("arga", 0);
+            instructionEntries[len++] = instructionEntry1;
+            function.setInstructionLen(len);
+            function.setInstructions(instructionEntries);
             isInt = true;
             String type = analyseExpr(funcName);
+            instructionEntries = function.getInstructions();
+            len = function.getInstructionLen();
+            InstructionEntry instructionEntry2 = new InstructionEntry("store64");
+            instructionEntries[len++] = instructionEntry2;
+            function.setInstructionLen(len);
+            function.setInstructions(instructionEntries);
             assert symbolEntry != null;
             if(!symbolEntry.getReturnType().equals(type)){
                 throw new AnalyzeError(ErrorCode.ReturnTypeWrong, nameToken.getStartPos());
@@ -478,10 +485,8 @@ public final class Analyser {
             }
         }
         instructionEntries = function.getInstructions();
-        len = function.getInstructionLen();
-        InstructionEntry instructionEntry2 = new InstructionEntry("store64");
+        int len = function.getInstructionLen();
         InstructionEntry instructionEntry3 = new InstructionEntry("ret");
-        instructionEntries[len++] = instructionEntry2;
         instructionEntries[len++] = instructionEntry3;
         function.setInstructionLen(len);
         function.setInstructions(instructionEntries);
@@ -517,6 +522,10 @@ public final class Analyser {
         analyseExpr(funcName);
         //记录当前指令集位置为loc2
         int loc2 = function.getInstructionLen();
+        instructionEntries = function.getInstructions();
+        if(!instructionEntries[loc2 - 1].getInstru().equals("brtrue") && !instructionEntries[loc2 - 1].getInstru().equals("brfalse")){
+            insertInstru(funcName, new InstructionEntry("brtrue", 1), loc2++);
+        }
         analyseBlockStmt(funcName);
         //记录当前指令集位置为loc3
         int loc3 = function.getInstructionLen();
@@ -529,22 +538,25 @@ public final class Analyser {
         analyseExpr(funcName);
         //loc1
         int loc1 = function.getInstructionLen();
-
+        InstructionEntry[] instructionEntries = function.getInstructions();
+        if(!instructionEntries[loc1 - 1].getInstru().equals("brtrue") && !instructionEntries[loc1 - 1].getInstru().equals("brfalse")){
+            insertInstru(funcName, new InstructionEntry("brtrue", 1), loc1++);
+        }
         analyseBlockStmt(funcName);
         //loc2
         int loc2 = function.getInstructionLen();
-        insertInstru(funcName, new InstructionEntry("br", loc2 - loc1 + 1), loc1);
+        insertInstru(funcName, new InstructionEntry("br", loc2 - loc1), loc1);
         //insertInstru(funcName, new InstructionEntry("br", 0), loc2 + 1);
         if(nextIf(TokenType.ELSE_KW) != null){
             if(check(TokenType.L_BRACE)){
                 analyseBlockStmt(funcName);
-                int loc3 = function.getInstructionLen();
-                insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
+//                int loc3 = function.getInstructionLen();
+//                insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
             else if(check(TokenType.IF_KW)){
                 analyseIfStmt(funcName);
-                int loc3 = function.getInstructionLen();
-                insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
+                //int loc3 = function.getInstructionLen();
+                //insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
         }
         int loc3 = function.getInstructionLen();
@@ -783,13 +795,14 @@ public final class Analyser {
         return type;
     }
     private String analyseA(String funcName) throws CompileError {
-        boolean isNeg = false;
-        if(check(TokenType.MINUS)){
-            isNeg = true;
+        String type;
+        int minusCount = 0;
+        while(check(TokenType.MINUS)){
+            minusCount++;
             expect(TokenType.MINUS);
         }
-        String type = analyseI(funcName);
-        if(isNeg){
+        type = analyseI(funcName);
+        for(int i = 0;i < minusCount;i++){
             SymbolEntry function = symbolTable.get(funcName);
             InstructionEntry[] instructionEntries = function.getInstructions();
             int len = function.getInstructionLen();
@@ -822,7 +835,7 @@ public final class Analyser {
                 }
                 expect(TokenType.L_PAREN);
                 boolean hasParam = false;
-                //无返回值
+                //有参数
                 if(!check(TokenType.R_PAREN)){
                     hasParam = true;
                     SymbolEntry function = symbolTable.get(funcName);
@@ -969,6 +982,23 @@ public final class Analyser {
             function.setInstructions(instructionEntries);
             return "int";
         }
+        else if(check(TokenType.STRING_LITERAL)){
+            var token = expect(TokenType.STRING_LITERAL);
+            String value = (String)token.getValue();
+            //计算全局变量数
+            int globalVarsNum = calcGlobalVars();
+            SymbolEntry function = symbolTable.get(funcName);
+            InstructionEntry[] instructionEntries = function.getInstructions();
+            int len = function.getInstructionLen();
+            // 生成代码
+            InstructionEntry instructionEntry1 = new InstructionEntry("push", globalVarsNum);
+            instructionEntries[len++] = instructionEntry1;
+            function.setInstructionLen(len);
+            function.setInstructions(instructionEntries);
+            //加入符号表
+            addSymbol(value, "string", "returnType", 0,true, true, token.getStartPos());
+            return "int";
+        }
         else if(check(TokenType.DOUBLE_LITERAL)){
             expect(TokenType.DOUBLE_LITERAL);
             return "double";
@@ -988,8 +1018,18 @@ public final class Analyser {
             analyseExpr(funcName);
         }
     }
-
-
+    private int calcGlobalVars(){
+        int globalVars = 0;
+        Iterator iter = symbolTable.entrySet().iterator();
+        while(iter.hasNext()){
+            HashMap.Entry entry = (HashMap.Entry)iter.next();
+            SymbolEntry symbolEntry = (SymbolEntry) entry.getValue();
+            if(!symbolEntry.getType().equals("func") && symbolEntry.getLayer() == 0){
+                globalVars++;
+            }
+        }
+        return globalVars;
+    }
 
 
 
