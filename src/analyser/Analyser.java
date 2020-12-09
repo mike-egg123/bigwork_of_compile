@@ -53,7 +53,7 @@ public final class Analyser {
         funcIndex.put("getint", 0);
         this.symbolTable.put("getdouble", new SymbolEntry("func", "double", new InstructionEntry[10], 0, true, true, getNextVariableOffset()));
         funcIndex.put("getdouble", 1);
-        this.symbolTable.put("getchar", new SymbolEntry("func", "char", new InstructionEntry[10], 0, true, true, getNextVariableOffset()));
+        this.symbolTable.put("getchar", new SymbolEntry("func", "int", new InstructionEntry[10], 0, true, true, getNextVariableOffset()));
         funcIndex.put("getchar", 2);
         this.symbolTable.put("putint", new SymbolEntry("func", "void", new InstructionEntry[10], 0, true, true, getNextVariableOffset()));
         funcIndex.put("putint", 3);
@@ -473,7 +473,7 @@ public final class Analyser {
     private void analyseContinueStmt(String funcName, int loc) throws CompileError{
         expect(TokenType.CONTINUE_KW);
         int currentLoc = symbolTable.get(funcName).getInstructionLen();
-        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3), currentLoc);
+        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 2), currentLoc);
         expect(TokenType.SEMICOLON);
     }
     private void analyseBlockStmt(String funcName, boolean isLoop, int loc1, int loc2) throws CompileError{
@@ -553,6 +553,7 @@ public final class Analyser {
         function.setInstructions(instructionEntries);
         //记录当前指令集位置为loc1
         int loc1 = function.getInstructionLen();
+        System.out.println("loc1:" + loc1);
         analyseExpr(funcName);
         //记录当前指令集位置为loc2
         int loc2 = function.getInstructionLen();
@@ -560,6 +561,7 @@ public final class Analyser {
         if(!instructionEntries[loc2 - 1].getInstru().equals("brtrue") && !instructionEntries[loc2 - 1].getInstru().equals("brfalse")){
             insertInstru(funcName, new InstructionEntry("brtrue", 1), loc2++);
         }
+        System.out.println("loc2:" + loc2);
         analyseBlockStmt(funcName, true, loc1, loc2);
         //记录当前指令集位置为loc3
         int loc3 = function.getInstructionLen();

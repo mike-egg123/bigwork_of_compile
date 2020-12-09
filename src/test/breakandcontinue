@@ -1,13 +1,13 @@
 fn main() -> void{
     let i:int = 2;
-    if i > 0{
-        break;
-    }
-    while(i > 0){
-        i = i - 1;
-        else if i == 1{
-            continue;
-        }
-    }
+        while 1{
+                i = i - 1;
+                if i == 2{
+                    break;
+                }
+                else{
+                    continue;
+                }
+            }
     putint(i);
 }
