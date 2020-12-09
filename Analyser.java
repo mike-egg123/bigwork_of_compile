@@ -460,7 +460,7 @@ public final class Analyser {
     private void analyseContinueStmt(String funcName, int loc) throws CompileError{
         expect(TokenType.CONTINUE_KW);
         int currentLoc = symbolTable.get(funcName).getInstructionLen();
-        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 2), currentLoc);
+        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 4), currentLoc);
         expect(TokenType.SEMICOLON);
     }
     private void analyseBlockStmt(String funcName, boolean isLoop, int loc1, int loc2) throws CompileError{
