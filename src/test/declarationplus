@@ -1,0 +1,6 @@
+fn main() -> void{
+    putint('a');
+    let i:int = 1;
+    putln();
+    putint(i);
+}

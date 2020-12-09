@@ -331,7 +331,7 @@ public final class Analyser {
         SymbolEntry thisSymbol = symbolTable.get(name);
         thisSymbol.setReturnType(returnType);
         funcIndex.put(name, findex++);
-        analyseBlockStmt(name);
+        analyseBlockStmt(name, false, 0, 0);
         if(returnType.equals("void")){
             SymbolEntry function = symbolTable.get(name);
             InstructionEntry[] instructionEntries = function.getInstructions();
@@ -391,7 +391,7 @@ public final class Analyser {
         function.setArgVars(argVars);
         function.setArgVarCount(argVarsCount);
     }
-    private void analyseStmt(String funcName) throws CompileError{
+    private void analyseStmt(String funcName, boolean isLoop, int loc1, int loc2) throws CompileError{
         if(check(TokenType.R_BRACE)){
         }
         else{
@@ -405,7 +405,7 @@ public final class Analyser {
             }
             //if语句
             else if(check(TokenType.IF_KW)){
-                analyseIfStmt(funcName);
+                analyseIfStmt(funcName, isLoop, loc1, loc2);
             }
             //while语句
             else if(check(TokenType.WHILE_KW)){
@@ -417,7 +417,21 @@ public final class Analyser {
             }
             //语句块
             else if(check(TokenType.L_BRACE)){
-                analyseBlockStmt(funcName);
+                analyseBlockStmt(funcName, isLoop, loc1, loc2);
+            }
+            //break语句
+            else if(check(TokenType.BREAK_KW)){
+                if(!isLoop){
+                    throw new AnalyzeError(ErrorCode.BreakOrContinueWrong, new Pos(0, 0));
+                }
+                analyseBreakStmt(funcName, loc2);
+            }
+            //continue语句
+            else if(check(TokenType.CONTINUE_KW)){
+                if(!isLoop){
+                    throw new AnalyzeError(ErrorCode.BreakOrContinueWrong, new Pos(0, 0));
+                }
+                analyseContinueStmt(funcName, loc1);
             }
             //空语句
             else if(check(TokenType.SEMICOLON)){
@@ -436,15 +450,26 @@ public final class Analyser {
     }
     private void analyseEmptyStmt() throws CompileError{
         expect(TokenType.SEMICOLON);
-
     }
-    private void analyseBlockStmt(String funcName) throws CompileError{
+    private void analyseBreakStmt(String funcName, int loc) throws CompileError{
+        expect(TokenType.BREAK_KW);
+        int currentLoc = symbolTable.get(funcName).getInstructionLen();
+        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3), currentLoc);
+        expect(TokenType.SEMICOLON);
+    }
+    private void analyseContinueStmt(String funcName, int loc) throws CompileError{
+        expect(TokenType.CONTINUE_KW);
+        int currentLoc = symbolTable.get(funcName).getInstructionLen();
+        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3), currentLoc);
+        expect(TokenType.SEMICOLON);
+    }
+    private void analyseBlockStmt(String funcName, boolean isLoop, int loc1, int loc2) throws CompileError{
         expect(TokenType.L_BRACE);
 //        if(nextIf(TokenType.R_BRACE) == null){
 //            analyseStmt();
 //        }
         while(!check(TokenType.R_BRACE)){
-            analyseStmt(funcName);
+            analyseStmt(funcName, isLoop, loc1, loc2);
         }
         expect(TokenType.R_BRACE);
     }
@@ -522,13 +547,13 @@ public final class Analyser {
         if(!instructionEntries[loc2 - 1].getInstru().equals("brtrue") && !instructionEntries[loc2 - 1].getInstru().equals("brfalse")){
             insertInstru(funcName, new InstructionEntry("brtrue", 1), loc2++);
         }
-        analyseBlockStmt(funcName);
+        analyseBlockStmt(funcName, true, loc1, loc2);
         //记录当前指令集位置为loc3
         int loc3 = function.getInstructionLen();
         insertInstru(funcName, new InstructionEntry("br", loc3 - loc2 + 1), loc2);
         insertInstru(funcName, new InstructionEntry("br", loc1 - loc3 - 2), loc3 + 1);
     }
-    private void analyseIfStmt(String funcName) throws CompileError{
+    private void analyseIfStmt(String funcName, boolean isLoop, int loc4, int loc5) throws CompileError{
         expect(TokenType.IF_KW);
         SymbolEntry function = symbolTable.get(funcName);
         analyseExpr(funcName);
@@ -538,7 +563,7 @@ public final class Analyser {
         if(!instructionEntries[loc1 - 1].getInstru().equals("brtrue") && !instructionEntries[loc1 - 1].getInstru().equals("brfalse")){
             insertInstru(funcName, new InstructionEntry("brtrue", 1), loc1++);
         }
-        analyseBlockStmt(funcName);
+        analyseBlockStmt(funcName, isLoop, loc4, loc5);
         //loc2
         int loc2 = function.getInstructionLen();
         insertInstru(funcName, new InstructionEntry("br", loc2 - loc1 + 1), loc1);
@@ -547,12 +572,12 @@ public final class Analyser {
         if(nextIf(TokenType.ELSE_KW) != null){
             hasElse = true;
             if(check(TokenType.L_BRACE)){
-                analyseBlockStmt(funcName);
+                analyseBlockStmt(funcName, isLoop, loc4, loc5);
 //                int loc3 = function.getInstructionLen();
 //                insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
             else if(check(TokenType.IF_KW)){
-                analyseIfStmt(funcName);
+                analyseIfStmt(funcName, isLoop, loc4, loc5);
                 //int loc3 = function.getInstructionLen();
                 //insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
@@ -1040,6 +1065,23 @@ public final class Analyser {
             function.setInstructions(instructionEntries);
             //加入符号表
             addSymbol(value, "string", "returnType", 0,true, true, token.getStartPos());
+            return "int";
+        }
+        else if(check(TokenType.CHAR_LITERAL)){
+            var token = expect(TokenType.CHAR_LITERAL);
+            SymbolEntry function = symbolTable.get(funcName);
+            InstructionEntry[] instructionEntries = function.getInstructions();
+            int len = function.getInstructionLen();
+            // 生成代码
+            String charStr = (String)token.getValue();
+            char charCh = 0;
+            for(int i = 0;i < charStr.length();i++){
+                charCh = charStr.charAt(i);
+            }
+            InstructionEntry instructionEntry1 = new InstructionEntry("push", charCh);
+            instructionEntries[len++] = instructionEntry1;
+            function.setInstructionLen(len);
+            function.setInstructions(instructionEntries);
             return "int";
         }
         else if(check(TokenType.DOUBLE_LITERAL)){

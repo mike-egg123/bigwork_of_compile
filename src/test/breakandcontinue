@@ -1,0 +1,13 @@
+fn main() -> void{
+    let i:int = 2;
+    if i > 0{
+        break;
+    }
+    while(i > 0){
+        i = i - 1;
+        else if i == 1{
+            continue;
+        }
+    }
+    putint(i);
+}

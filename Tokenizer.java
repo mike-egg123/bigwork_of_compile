@@ -50,6 +50,10 @@ public class Tokenizer {
         it.nextChar();
         while (it.peekChar() != '\'') {
             charstr[i] = it.peekChar();
+            if(it.peekChar() == '\\'){
+                it.nextChar();
+                charstr[++i] = it.peekChar();
+            }
             it.nextChar();
             i++;
         }
