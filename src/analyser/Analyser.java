@@ -344,7 +344,7 @@ public final class Analyser {
         SymbolEntry thisSymbol = symbolTable.get(name);
         thisSymbol.setReturnType(returnType);
         funcIndex.put(name, findex++);
-        analyseBlockStmt(name, false, 0, 0);
+        analyseBlockStmt(name, false, 0, 0, 0);
         if(returnType.equals("void")){
             SymbolEntry function = symbolTable.get(name);
             InstructionEntry[] instructionEntries = function.getInstructions();
@@ -404,7 +404,7 @@ public final class Analyser {
         function.setArgVars(argVars);
         function.setArgVarCount(argVarsCount);
     }
-    private void analyseStmt(String funcName, boolean isLoop, int loc1, int loc2) throws CompileError{
+    private void analyseStmt(String funcName, boolean isLoop, int loc1, int loc2, int elseLayer) throws CompileError{
         if(check(TokenType.R_BRACE)){
         }
         else{
@@ -418,7 +418,7 @@ public final class Analyser {
             }
             //if语句
             else if(check(TokenType.IF_KW)){
-                analyseIfStmt(funcName, isLoop, loc1, loc2);
+                analyseIfStmt(funcName, isLoop, loc1, loc2, elseLayer);
             }
             //while语句
             else if(check(TokenType.WHILE_KW)){
@@ -430,7 +430,7 @@ public final class Analyser {
             }
             //语句块
             else if(check(TokenType.L_BRACE)){
-                analyseBlockStmt(funcName, isLoop, loc1, loc2);
+                analyseBlockStmt(funcName, isLoop, loc1, loc2, elseLayer);
             }
             //break语句
             else if(check(TokenType.BREAK_KW)){
@@ -444,7 +444,7 @@ public final class Analyser {
                 if(!isLoop){
                     throw new AnalyzeError(ErrorCode.BreakOrContinueWrong, new Pos(0, 0));
                 }
-                analyseContinueStmt(funcName, loc1);
+                analyseContinueStmt(funcName, loc1, elseLayer);
             }
             //空语句
             else if(check(TokenType.SEMICOLON)){
@@ -470,19 +470,19 @@ public final class Analyser {
         insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3), currentLoc);
         expect(TokenType.SEMICOLON);
     }
-    private void analyseContinueStmt(String funcName, int loc) throws CompileError{
+    private void analyseContinueStmt(String funcName, int loc, int elseLayer) throws CompileError{
         expect(TokenType.CONTINUE_KW);
         int currentLoc = symbolTable.get(funcName).getInstructionLen();
-        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 4), currentLoc);
+        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3 - elseLayer), currentLoc);
         expect(TokenType.SEMICOLON);
     }
-    private void analyseBlockStmt(String funcName, boolean isLoop, int loc1, int loc2) throws CompileError{
+    private void analyseBlockStmt(String funcName, boolean isLoop, int loc1, int loc2, int elseLayer) throws CompileError{
         expect(TokenType.L_BRACE);
 //        if(nextIf(TokenType.R_BRACE) == null){
 //            analyseStmt();
 //        }
         while(!check(TokenType.R_BRACE)){
-            analyseStmt(funcName, isLoop, loc1, loc2);
+            analyseStmt(funcName, isLoop, loc1, loc2, elseLayer);
         }
         expect(TokenType.R_BRACE);
     }
@@ -562,13 +562,13 @@ public final class Analyser {
             insertInstru(funcName, new InstructionEntry("brtrue", 1), loc2++);
         }
         System.out.println("loc2:" + loc2);
-        analyseBlockStmt(funcName, true, loc1, loc2);
+        analyseBlockStmt(funcName, true, loc1, loc2, 0);
         //记录当前指令集位置为loc3
         int loc3 = function.getInstructionLen();
         insertInstru(funcName, new InstructionEntry("br", loc3 - loc2 + 1), loc2);
         insertInstru(funcName, new InstructionEntry("br", loc1 - loc3 - 2), loc3 + 1);
     }
-    private void analyseIfStmt(String funcName, boolean isLoop, int loc4, int loc5) throws CompileError{
+    private void analyseIfStmt(String funcName, boolean isLoop, int loc4, int loc5, int elseLayer) throws CompileError{
         expect(TokenType.IF_KW);
         SymbolEntry function = symbolTable.get(funcName);
         analyseExpr(funcName);
@@ -578,7 +578,7 @@ public final class Analyser {
         if(!instructionEntries[loc1 - 1].getInstru().equals("brtrue") && !instructionEntries[loc1 - 1].getInstru().equals("brfalse")){
             insertInstru(funcName, new InstructionEntry("brtrue", 1), loc1++);
         }
-        analyseBlockStmt(funcName, isLoop, loc4, loc5);
+        analyseBlockStmt(funcName, isLoop, loc4, loc5, elseLayer);
         //loc2
         int loc2 = function.getInstructionLen();
         insertInstru(funcName, new InstructionEntry("br", loc2 - loc1 + 1), loc1);
@@ -587,12 +587,13 @@ public final class Analyser {
         if(nextIf(TokenType.ELSE_KW) != null){
             hasElse = true;
             if(check(TokenType.L_BRACE)){
-                analyseBlockStmt(funcName, isLoop, loc4, loc5);
+                analyseBlockStmt(funcName, isLoop, loc4, loc5, elseLayer);
 //                int loc3 = function.getInstructionLen();
 //                insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
             else if(check(TokenType.IF_KW)){
-                analyseIfStmt(funcName, isLoop, loc4, loc5);
+                elseLayer++;
+                analyseIfStmt(funcName, isLoop, loc4, loc5, elseLayer);
                 //int loc3 = function.getInstructionLen();
                 //insertInstru(funcName, new InstructionEntry("br", loc3 - loc2), loc2 + 1);
             }
