@@ -437,7 +437,7 @@ public final class Analyser {
                 if(!isLoop){
                     throw new AnalyzeError(ErrorCode.BreakOrContinueWrong, new Pos(0, 0));
                 }
-                analyseBreakStmt(funcName, loc2);
+                analyseBreakStmt(funcName, loc2, elseLayer);
             }
             //continue语句
             else if(check(TokenType.CONTINUE_KW)){
@@ -464,10 +464,10 @@ public final class Analyser {
     private void analyseEmptyStmt() throws CompileError{
         expect(TokenType.SEMICOLON);
     }
-    private void analyseBreakStmt(String funcName, int loc) throws CompileError{
+    private void analyseBreakStmt(String funcName, int loc, int elseLayer) throws CompileError{
         expect(TokenType.BREAK_KW);
         int currentLoc = symbolTable.get(funcName).getInstructionLen();
-        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3), currentLoc);
+        insertInstru(funcName, new InstructionEntry("br", loc - currentLoc - 3 - elseLayer), currentLoc);
         expect(TokenType.SEMICOLON);
     }
     private void analyseContinueStmt(String funcName, int loc, int elseLayer) throws CompileError{
