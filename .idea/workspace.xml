@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/test/input.c0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/test_for_samshui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/out.o0" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/out.o0" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/analyser/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/analyser/Analyser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/out.o0" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/out.o0" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +38,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -41,8 +46,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\bigwork_of_compile" />
       <recent name="F:\bigwork_of_compile\src\test" />
+      <recent name="F:\bigwork_of_compile" />
       <recent name="F:\bigwork_of_compile\src\error" />
       <recent name="F:\bigwork_of_compile\src\instruction" />
       <recent name="F:\bigwork_of_compile\src\analyser" />
@@ -66,7 +71,7 @@
     <configuration name="FinalTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.FinalTest" />
       <module name="bigwork_of_compile" />
-      <option name="PROGRAM_PARAMETERS" value="F:\bigwork_of_compile\src\test\breakandcontinue F:\bigwork_of_compile\src\test\out.o0" />
+      <option name="PROGRAM_PARAMETERS" value="F:\bigwork_of_compile\src\test\input.c0 F:\bigwork_of_compile\src\test\out.o0" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="test.*" />
@@ -159,7 +164,10 @@
       <workItem from="1607385585737" duration="33385000" />
       <workItem from="1607445396227" duration="6844000" />
       <workItem from="1607469842659" duration="5763000" />
-      <workItem from="1607499608059" duration="8420000" />
+      <workItem from="1607499608059" duration="10307000" />
+      <workItem from="1607524446958" duration="519000" />
+      <workItem from="1607563168297" duration="1437000" />
+      <workItem from="1607784210757" duration="34000" />
     </task>
     <servers />
   </component>
@@ -175,38 +183,42 @@
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="371" y="103" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1280.689@0.0.1280.689" timestamp="1607418355793" />
-    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607507042810">
+    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607784244095">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.689@0.0.1280.689" timestamp="1607507042810" />
-    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607501172107">
+    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.689@0.0.1280.689" timestamp="1607784244095" />
+    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607784229368">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" timestamp="1607501172107" />
+    <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" timestamp="1607784229368" />
     <state x="667" y="54" key="#com.intellij.ide.util.MemberChooser" timestamp="1607418594911">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="667" y="54" key="#com.intellij.ide.util.MemberChooser/0.0.1280.689@0.0.1280.689" timestamp="1607418594911" />
+    <state x="263" y="0" key="CommitChangelistDialog2" timestamp="1607784368593">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="263" y="0" key="CommitChangelistDialog2/0.0.1280.689@0.0.1280.689" timestamp="1607784368593" />
     <state x="487" y="105" key="FileChooserDialogImpl" timestamp="1607340737974">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="487" y="105" key="FileChooserDialogImpl/0.0.1280.689@0.0.1280.689" timestamp="1607340737974" />
-    <state width="1237" height="160" key="GridCell.Tab.0.bottom" timestamp="1607508038874">
+    <state width="1237" height="174" key="GridCell.Tab.0.bottom" timestamp="1607784368687">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="160" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607508038874" />
-    <state width="1237" height="160" key="GridCell.Tab.0.center" timestamp="1607508038873">
+    <state width="1237" height="174" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
+    <state width="1237" height="174" key="GridCell.Tab.0.center" timestamp="1607784368687">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="160" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1607508038873" />
-    <state width="1237" height="160" key="GridCell.Tab.0.left" timestamp="1607508038873">
+    <state width="1237" height="174" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
+    <state width="1237" height="174" key="GridCell.Tab.0.left" timestamp="1607784368687">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="160" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1607508038873" />
-    <state width="1237" height="160" key="GridCell.Tab.0.right" timestamp="1607508038873">
+    <state width="1237" height="174" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
+    <state width="1237" height="174" key="GridCell.Tab.0.right" timestamp="1607784368687">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="160" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1607508038873" />
+    <state width="1237" height="174" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
     <state width="1237" height="150" key="GridCell.Tab.1.bottom" timestamp="1607452246444">
       <screen x="0" y="0" width="1280" height="689" />
     </state>

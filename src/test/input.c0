@@ -1,0 +1,30 @@
+let g: int;
+
+let h: int;
+
+let f: int;
+
+let e: int;
+
+
+
+fn EightWhile(e:int) -> int{
+   e=e+1;
+   return e;
+}
+
+
+
+fn main() -> void {
+
+  g = 1;
+
+  h = 2;
+
+  e = 4;
+
+  f = 6;
+
+  putint(EightWhile(e));
+
+}
