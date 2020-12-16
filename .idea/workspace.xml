@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d0faad2-331b-4d7c-b161-68cd9a54284b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/input.c0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/test_for_samshui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/out.o0" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/bigwork_of_compile/test/out.o0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/analyser/Analyser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/analyser/Analyser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/input.c0" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/input.c0" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/out.o0" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/out.o0" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,12 +165,26 @@
       <workItem from="1607499608059" duration="10307000" />
       <workItem from="1607524446958" duration="519000" />
       <workItem from="1607563168297" duration="1437000" />
-      <workItem from="1607784210757" duration="34000" />
+      <workItem from="1607784210757" duration="242000" />
+      <workItem from="1608104072884" duration="156000" />
+      <workItem from="1608120380754" duration="2237000" />
     </task>
+    <task id="LOCAL-00001" summary="将mini的Analyser中的多余代码删除">
+      <created>1607784400158</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1607784400158</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="将mini的Analyser中的多余代码删除" />
+    <option name="LAST_COMMIT_MESSAGE" value="将mini的Analyser中的多余代码删除" />
   </component>
   <component name="WindowStateProjectService">
     <state x="233" y="7" key="#Project_Structure" timestamp="1606613345040">
@@ -183,10 +195,10 @@
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="371" y="103" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1280.689@0.0.1280.689" timestamp="1607418355793" />
-    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607784244095">
+    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1608104115427">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.689@0.0.1280.689" timestamp="1607784244095" />
+    <state x="105" y="6" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.689@0.0.1280.689" timestamp="1608104115427" />
     <state x="396" y="154" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607784229368">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
@@ -195,30 +207,30 @@
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="667" y="54" key="#com.intellij.ide.util.MemberChooser/0.0.1280.689@0.0.1280.689" timestamp="1607418594911" />
-    <state x="263" y="0" key="CommitChangelistDialog2" timestamp="1607784368593">
+    <state x="263" y="0" key="CommitChangelistDialog2" timestamp="1608122798165">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="263" y="0" key="CommitChangelistDialog2/0.0.1280.689@0.0.1280.689" timestamp="1607784368593" />
+    <state x="263" y="0" key="CommitChangelistDialog2/0.0.1280.689@0.0.1280.689" timestamp="1608122798165" />
     <state x="487" y="105" key="FileChooserDialogImpl" timestamp="1607340737974">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="487" y="105" key="FileChooserDialogImpl/0.0.1280.689@0.0.1280.689" timestamp="1607340737974" />
-    <state width="1237" height="174" key="GridCell.Tab.0.bottom" timestamp="1607784368687">
+    <state width="1237" height="190" key="GridCell.Tab.0.bottom" timestamp="1608121906993">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="174" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
-    <state width="1237" height="174" key="GridCell.Tab.0.center" timestamp="1607784368687">
+    <state width="1237" height="190" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1608121906993" />
+    <state width="1237" height="190" key="GridCell.Tab.0.center" timestamp="1608121906993">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="174" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
-    <state width="1237" height="174" key="GridCell.Tab.0.left" timestamp="1607784368687">
+    <state width="1237" height="190" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1608121906993" />
+    <state width="1237" height="190" key="GridCell.Tab.0.left" timestamp="1608121906993">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="174" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
-    <state width="1237" height="174" key="GridCell.Tab.0.right" timestamp="1607784368687">
+    <state width="1237" height="190" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1608121906993" />
+    <state width="1237" height="190" key="GridCell.Tab.0.right" timestamp="1608121906993">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1237" height="174" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1607784368687" />
+    <state width="1237" height="190" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1608121906993" />
     <state width="1237" height="150" key="GridCell.Tab.1.bottom" timestamp="1607452246444">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
@@ -239,6 +251,10 @@
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="144" y="0" key="SettingsEditor/0.0.1280.689@0.0.1280.689" timestamp="1606613244027" />
+    <state x="233" y="81" key="Vcs.Push.Dialog.v2" timestamp="1607784427351">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="233" y="81" key="Vcs.Push.Dialog.v2/0.0.1280.689@0.0.1280.689" timestamp="1607784427351" />
     <state x="303" y="10" width="672" height="678" key="search.everywhere.popup" timestamp="1607223707607">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
